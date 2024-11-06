@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post" , enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input type="file" name="image" id="image" class="form-control" accept=".jpg, .jpeg, .png" multiple>
+        {% for error in form.errors.image %}
+        <b class="text-danger">{{ error }}</b>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        <label for="post" class="form-label">Post</label>
+        <textarea name="post" id="post" rows="5" class="form-control"></textarea>
+        {% for error in form.errors.post %}
+        <b class="text-danger">{{ error }}</b>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+<hr>
+{% for post in posts %}
+<div class="post">
+    <div class="mb-3">
+        <b>{{ post.post }}</b>
+    </div>
+    <div id="carouselExample" class="carousel slide bg-dark">
+        <div class="carousel-inner">
+            {% for image in post.image_set.all %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ image.image.url }}" class="d-block" alt="{{ image.image }}">
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
